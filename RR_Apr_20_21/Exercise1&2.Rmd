@@ -1,0 +1,58 @@
+---
+title: "Task 1 & 2 - Apr 20-21"
+author: "Gunneet Singh"
+date: "4/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## 1. FizBuzz problem
+
+
+```{r}
+i <- seq(100)
+for(x in i) {
+  if(x %% 3 == 0) cat("Fizz \n")
+  else if(x %% 5 == 0) cat("Buzz \n")
+  else if(x %% 15 == 0) cat("FizzBuzz \n")
+  cat(x, "\n")
+}
+```
+
+
+## 2.1 
+
+
+```{r message=FALSE, warning=FALSE}
+library(types)
+
+# Required function to render the largest Fibonacci number smaller than the input
+
+fibnum <- function(num1 = ? integer){
+  if(num1 <= 1){
+    return(num1)
+  }
+  else 
+    return(fibnum(num1 - 1) + fibnum(num1 - 2))
+}
+
+reqfun <- function(num2 = ? integer ? float){
+  
+  for(x in 1:(num2 + 1))
+  {if (fibnum(x) >= num2)
+  {return(fibnum(x - 1))
+  }
+  }
+}
+
+# Example:
+
+reqfun(100)
+
+```
+
+
