@@ -1,0 +1,99 @@
+---
+title: "Metaanalysis_exercise"
+author: "Gunneet Singh"
+date: "5/26/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(meta)
+library(metafor)
+library(dplyr)
+```
+
+
+
+```{r}
+# Importing the dataset
+data <- read_excel("metaanalysis_data.xlsx")
+```
+
+### Case 1. Our effect sizes are already calculated
+
+
+```{r}
+m <- metagen(TE=N_boys,
+             seTE=Mean_boys_play_male,
+             data=data,
+             studlab=paste(Study),
+             comb.fixed = TRUE,
+             comb.random = FALSE)
+m
+```
+
+
+### Case 2. Our effect sizes are not calculated but we have the necessary data
+
+
+```{r}
+m.raw <- metacont(n.e=N_boys,
+                  mean.e=Mean_boys_play_male,
+                  sd.e=SD_boys_play_male,
+                  n.c=N_girls,
+                  mean.c=Mean_girls_play_male,
+                  sd.c=SD_girls_play_male,
+                  data=data,
+                  studlab=paste(Study),
+                  comb.fixed = TRUE,
+                  comb.random = TRUE,
+)
+m.raw
+```
+
+### Case 3. `matada` again but with Random effects
+
+```{r}
+m_re <- metagen(TE=N_boys,
+             seTE=Mean_boys_play_male,
+             data=data,
+             studlab=paste(Study),
+             comb.fixed = FALSE,
+             comb.random = TRUE)
+m_re
+```
+
+### One popular way of depicting such analyses: `forest plots`
+
+With `meta` package this is very simple. We just put our results into the `forest()` function:
+
+```{r}
+m %>% forest(sortvar=TE)
+```
+
+```{r}
+m_re %>% forest(sortvar=TE)
+```
+
+
+## Checking for publication bias
+
+Again, we use what we defined previously.
+
+```{r}
+m %>% funnel()
+```
+
+And we can add some additional features, e.g. let's make it a 'contour-enhanced' funnel plot:
+
+```{r}
+m %>% funnel(contour = c(.95,.975,.99),
+       col.contour=c("darkblue","blue","lightblue"))+
+legend(1.4, 0, c("p < 0.05", "p<0.025", "< 0.01"),bty = "n",
+       fill=c("darkblue","blue","lightblue"))
+```
